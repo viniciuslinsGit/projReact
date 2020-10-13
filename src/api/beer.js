@@ -6,7 +6,7 @@ const beerApi = {
     return data;
   },
   listPerPage: async (page, perPage) => {
-    const { data } = await axios.get(`beers?page=${page}&per_page=${perPage}`);
+    const { data } = await axios.get(`beers?page=${++page}&per_page=${perPage}`);
     return data;
   },
   get: async (id) => {

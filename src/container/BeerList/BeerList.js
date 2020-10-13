@@ -14,8 +14,10 @@ class BeerList extends Component {
     this.state = {
       listBeerGrid : [],
       perPage: 5,
-      page: 1
+      page: 0,
+      totalRows: 0
     }
+    this.totalList()
   }
 
   componentDidMount() {
@@ -33,26 +35,29 @@ class BeerList extends Component {
     history.push(`beers/${personId}`)
   }
 
-  handleChangePage = (newPage) => {
-    if(newPage < 1){
-      this.state.page = 1
-    }else{
-      this.state.page = newPage
-    }
+  handleChangePage = (event, newPage) => {
+    this.state.page = newPage
     this.componentDidMount()
   }
   
   handleChangeRowsPerPage = (event) => {
     this.state.perPage = +event.target.value
-    console.log(this.state.perPage);
     this.componentDidMount()
   };
+
+  totalList = () => {
+    beerApi.all()
+      .then(beerList => {
+        this.setState({ totalRows: beerList.length })
+      })
+      .catch(error => console.error(error))
+  }
 
   render() {
 
     const { history } = this.props
     const lista = this.state.listBeerGrid 
-    console.log(lista.length);
+    const totalLinhas = this.state.totalRows
     
 
     return(
@@ -93,7 +98,7 @@ class BeerList extends Component {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={lista.length}
+            count={totalLinhas}
             rowsPerPage={this.state.perPage}
             page={this.state.page}
             onChangePage={this.handleChangePage}
